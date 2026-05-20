@@ -61,6 +61,7 @@ CREATE TABLE anuncio (
     descricao    TEXT,
     preco        DECIMAL(10, 2) NOT NULL,
     estoque      INT DEFAULT 0,
+    imagem       VARCHAR(255) NULL,
     dataCriacao  DATETIME DEFAULT CURRENT_TIMESTAMP,
     ativo        BOOLEAN DEFAULT TRUE,
     FOREIGN KEY (idFornecedor) REFERENCES fornecedor(idFornecedor),
@@ -74,13 +75,49 @@ CREATE TABLE avaliacao (
     nota            TINYINT NOT NULL,
     comentario      TEXT,
     dataAvaliacao   DATETIME DEFAULT CURRENT_TIMESTAMP,
-    
+
     CONSTRAINT chk_nota CHECK (nota BETWEEN 1 AND 5),
-    CONSTRAINT uq_avaliacao UNIQUE (idComprador, idAnuncio), -- impede avaliar o mesmo anúncio duas vezes
-    
+    CONSTRAINT uq_avaliacao UNIQUE (idComprador, idAnuncio),
+
     FOREIGN KEY (idComprador) REFERENCES comprador(idComprador),
     FOREIGN KEY (idAnuncio)   REFERENCES anuncio(idAnuncio)
 );
+
+-- Carrinho de Compras
+CREATE TABLE carrinho (
+    idCarrinho INT AUTO_INCREMENT PRIMARY KEY,
+    idUsuario INT NOT NULL,
+    idAnuncio INT NOT NULL,
+    quantidade INT NOT NULL DEFAULT 1,
+    dataCriacao DATETIME DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE KEY unique_user_product (idUsuario, idAnuncio),
+    FOREIGN KEY (idUsuario) REFERENCES usuario(idUsuario) ON DELETE CASCADE,
+    FOREIGN KEY (idAnuncio) REFERENCES anuncio(idAnuncio) ON DELETE CASCADE
+);
+
+-- Pedidos
+CREATE TABLE pedido (
+    idPedido INT AUTO_INCREMENT PRIMARY KEY,
+    idComprador INT NOT NULL,
+    totalPedido DECIMAL(10, 2) NOT NULL,
+    status VARCHAR(50) DEFAULT 'pendente',
+    endereco VARCHAR(500) NOT NULL,
+    telefone VARCHAR(20) NOT NULL,
+    dataPedido DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (idComprador) REFERENCES comprador(idComprador) ON DELETE CASCADE
+);
+
+-- Itens do Pedido
+CREATE TABLE pedido_item (
+    idPedidoItem INT AUTO_INCREMENT PRIMARY KEY,
+    idPedido INT NOT NULL,
+    idAnuncio INT NOT NULL,
+    quantidade INT NOT NULL,
+    precoUnitario DECIMAL(10, 2) NOT NULL,
+    FOREIGN KEY (idPedido) REFERENCES pedido(idPedido) ON DELETE CASCADE,
+    FOREIGN KEY (idAnuncio) REFERENCES anuncio(idAnuncio)
+);
+
 -- Inserir categorias padrão
 INSERT INTO categoriaProduto (nomeCategoria, descricao) VALUES
 ('Nozes', 'Nozes frescas e premium de qualidade superior'),

@@ -134,7 +134,7 @@ export default function RegisterPage() {
                 onChange={(e) => update('tipoUsuario', e.target.value)}
                 className={fieldClass}
               >
-                <option value="1">Administrador</option>
+                {/* <option value="1">Administrador</option> */}
                 <option value="2">Comprador</option>
                 <option value="3">Fornecedor</option>
               </select>
