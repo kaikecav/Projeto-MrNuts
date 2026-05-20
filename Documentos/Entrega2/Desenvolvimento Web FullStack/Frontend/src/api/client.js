@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
-export const UPLOADS_URL = import.meta.env.VITE_UPLOADS_URL || 'http://localhost:3000';
+const API_URL = import.meta.env.VITE_API_URL || 'https://projeto-mrnuts.onrender.com/api';
+export const UPLOADS_URL = import.meta.env.VITE_UPLOADS_URL || 'https://projeto-mrnuts.onrender.com';
 
 const api = axios.create({
   baseURL: API_URL,
